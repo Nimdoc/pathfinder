@@ -21,6 +21,13 @@ class ray_caster
                                         float line1_x2, float line1_y2,
                                         float line2_x1, float line2_y1,
                                         float line2_x2, float line2_y2);
+
+		bool lineIntersection(
+				float Ax, float Ay,
+				float Bx, float By,
+				float Cx, float Cy,
+				float Dx, float Dy,
+				float *X, float *Y);
 		
 	 	void get_intersect_points(float line1_x1, float line1_y1,
                                         float line1_x2, float line1_y2,
