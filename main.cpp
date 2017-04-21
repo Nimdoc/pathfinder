@@ -6,6 +6,7 @@
 #include "ray_window.h"
 #include "wall_object.h"
 #include "ray_caster.h"
+#include "player_class.h"
 
 // GLOBAL CONSTANTS
 
@@ -42,6 +43,9 @@ int main(int argc, char** argv)
 	// if no argument or an even number entered,
 	// tell user and quit
 	
+	// create the player object
+	Player player1;
+
 	if (argc !=2) 
 		std::cout << "Usage: ./Pathfinder <Size>" << std::endl;
 	if (!(atoi(argv[1])%2))
