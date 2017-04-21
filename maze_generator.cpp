@@ -1,26 +1,31 @@
 #include "maze_generator.h"
 
-
 void generate_maze::generate_map()
 {
-	srand(unsigned(time(NULL)));
-	int random_wall = 0;
+	// TEMP CHEATS VARIABLE
+	// replace with command line argument or toggle?
+	// or we can just leave it out of the game but show it in
+	// console for debugging
+	bool cheats = true;
 
+	int random_wall = 0;
 	int pos_X, pos_Y;
 	int total_num_cells;
 
+
 	// pick a random starting point with odd coordinates
-	pos_X = ((2*rand())+1) % (map_size -1);
-	pos_Y = ((2*rand())+1) % (map_size -1);
+	srand(unsigned(time(0)));
+	pos_X = ( ( (rand()/2) *2) +1) % (map_size -1);
+	pos_Y = ( ( (rand()/2) *2) +1) % (map_size -1);
 
 	// total number of walls to be removed to make the maze
 	total_num_cells = ((map_size-1)/2)*((map_size-1)/2);
 
-	// store starting pos in corresponding members
-	start_X = pos_X;
-	start_Y = pos_Y;
+	// store starting pos in class members
+	set_start_pos(pos_Y, pos_X);
 
-	map[start_Y][start_X].cell_type = START;		// mark cell as starting point
+	// mark the starting cell as a start cell, and mark it as visited
+	map[start_Y][start_X].cell_type = START;
 	map[start_Y][start_X].visited = true;
 
 	int num_visited_cells = 1;
@@ -31,6 +36,13 @@ void generate_maze::generate_map()
 	// repeat until maze is generated
 	stack<int> traversed_X, traversed_Y;
 
+	// stores the cheat path positoins for X and Y
+	// using different stacks so that we can store
+	// the odd and even coordinates without changing the
+	// maze generation, using traversed_X and traversed_Y
+	// marks only the odd coordinates as cheat_path
+	stack<int> cheat_X, cheat_Y;
+
 	while((num_visited_cells < total_num_cells))
 	{
 		bool can_move_north = false;
@@ -38,13 +50,13 @@ void generate_maze::generate_map()
 		bool can_move_west = false;
 		bool can_move_east = false;
 
-		if ( (pos_Y > 1) && (map[pos_Y-2][pos_X].visited == false) &&
+		if ( (pos_Y > 1) && (map[pos_Y-2][pos_X].visited == false ) &&
 				(map[pos_Y][pos_X].north_wall == true &&
 				map[pos_Y-2][pos_X].south_wall == true) )
 		{
 			can_move_north = true;
 		}
-		if ( (pos_Y < map_size-2) && (map[pos_Y+2][pos_X].visited == false) &&
+		if ( (pos_Y < map_size-2) && (map[pos_Y+2][pos_X].visited == false ) &&
 				(map[pos_Y][pos_X].south_wall == true &&
 				 map[pos_Y+2][pos_X].north_wall == true) )
 		{
@@ -64,13 +76,16 @@ void generate_maze::generate_map()
 			can_move_east = true;
 		}
 
+		// if we can clear a wall surrounding the current cell, in any direction
 		if (can_move_north || can_move_south || can_move_west || can_move_east)
 		{
+			// found_next_move is true when a random direction is chosen
 			bool found_next_move = false;
-			// cycle through until correct move is found
+			// cycle through until next move is found
 			while (!found_next_move) {
 				// pick a random wall bordering the current cell
 				random_wall = (rand() % 4);
+				// pick a direction to move
 				Direction dir;
 				switch (random_wall)
 				{
@@ -87,6 +102,7 @@ void generate_maze::generate_map()
 					dir = Direction::EAST;
 					break;
 				}
+				// move north
 				if (dir == Direction::NORTH && can_move_north)
 				{
 					found_next_move = true;
@@ -98,12 +114,21 @@ void generate_maze::generate_map()
 					traversed_X.push(pos_X);
 					traversed_Y.push(pos_Y);
 
+					// used store the path from start to end
+					if (cheats) {
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y);
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y-1);
+					}
+
 					pos_Y -= 2;								// move to new cell
 					map[pos_Y][pos_X].visited = true;		// mark new cell as visited
 					map[pos_Y][pos_X].cell_type = SPACE;		// clear the new cell
 					map[pos_Y][pos_X].south_wall = false;	// remove south wall
 					num_visited_cells++;
 				}
+				// move south
 				else if (dir == Direction::SOUTH && can_move_south)
 				{
 					found_next_move = true;
@@ -115,12 +140,21 @@ void generate_maze::generate_map()
 					traversed_X.push(pos_X);
 					traversed_Y.push(pos_Y);
 
+					// used store the path from start to end
+					if (cheats) {
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y);
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y+1);
+					}
+
 					pos_Y += 2;								// move to new cell
 					map[pos_Y][pos_X].visited = true;		// mark new cell as visited
 					map[pos_Y][pos_X].cell_type = SPACE;		// clear the new cell
 					map[pos_Y][pos_X].north_wall = false;	// remove north wall
 					num_visited_cells++;
 				}
+				// move west
 				else if (dir == Direction::WEST && can_move_west)
 				{
 					found_next_move = true;
@@ -132,12 +166,21 @@ void generate_maze::generate_map()
 					traversed_X.push(pos_X);
 					traversed_Y.push(pos_Y);
 
+					// used store the path from start to end
+					if (cheats) {
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y);
+						cheat_X.push(pos_X-1);
+						cheat_Y.push(pos_Y);
+					}
+
 					pos_X -= 2;								// move to new cell
 					map[pos_Y][pos_X].visited = true;		// mark new cell as visited
 					map[pos_Y][pos_X].cell_type = SPACE;		// clear the new cell
 					map[pos_Y][pos_X].east_wall = false;	// remove east wall
 					num_visited_cells++;
 				}
+				// move east
 				else if (dir == Direction::EAST && can_move_east)
 				{
 					found_next_move = true;
@@ -148,6 +191,14 @@ void generate_maze::generate_map()
 					// store x and y pos on stack
 					traversed_X.push(pos_X);
 					traversed_Y.push(pos_Y);
+
+					// used store the path from start to end
+					if (cheats) {
+						cheat_X.push(pos_X);
+						cheat_Y.push(pos_Y);
+						cheat_X.push(pos_X+1);
+						cheat_Y.push(pos_Y);
+					}
 
 					pos_X += 2;								// move to new cell
 					map[pos_Y][pos_X].visited = true;		// mark cell as visited
@@ -162,17 +213,38 @@ void generate_maze::generate_map()
 			// pop off x and y pos, reiterate and check for walls on new x and y pos
 			// until a new path can be formed
 			if ((traversed_X.size() != 0)) {
-				pos_X = traversed_X.top();
-				traversed_X.pop();
 				pos_Y = traversed_Y.top();
+				pos_X = traversed_X.top();
 				traversed_Y.pop();
+				traversed_X.pop();
+				cheat_X.pop();
+				cheat_X.pop();
+				cheat_Y.pop();
+				cheat_Y.pop();
 			}
 		}
 	}
 	// mark last cell as End
 	map[pos_Y][pos_X].cell_type = END;
+
+	// store ending pos in class members
+	set_end_pos(pos_Y, pos_X);
+
+	// if cheats then label the cells which make up the correct path
+	if (cheats)
+		cheat_mode(cheat_Y, cheat_X);
 }
 
+// mark the cheat path
+void generate_maze::cheat_mode(stack<int> cheat_Y, stack<int> cheat_X) {
+	while (cheat_Y.size() > 1) {
+		map[cheat_Y.top()][cheat_X.top()].cell_type = 4;
+		cheat_Y.pop();
+		cheat_X.pop();
+	}
+}
+
+// initialize the map
 void generate_maze::init_map()
 {
 	for(int i = 0; i < map_size; i++)
@@ -211,6 +283,7 @@ void generate_maze::init_map()
 	}
 }
 
+// prints the map in console
 void generate_maze::print_map()
 {
 	for (int i = 0; i < map_size; i++)
@@ -226,8 +299,11 @@ void generate_maze::print_map()
 				cout << "S";
 			else if (map[i][j].cell_type == END)
 				cout << "E";
+			else if (map[i][j].cell_type == CHEAT_PATH)
+				cout << ".";
 		}
 	}
+	cout << endl;
 }
 
 

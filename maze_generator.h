@@ -17,6 +17,7 @@
 #define WALL 1
 #define START 2
 #define END 3
+#define CHEAT_PATH 4
 
 // wall directions
 enum class Direction{
@@ -34,7 +35,6 @@ using namespace std;
 // and whether or not its been visited
 struct Cell {
 	bool visited;
-
 	bool north_wall;
 	bool south_wall;
 	bool west_wall;
@@ -75,17 +75,19 @@ public:
 	void init_map();
 	void generate_map();
 	void print_map();
+	void cheat_mode(stack<int> cheat_Y, stack<int>cheat_X);
 
 	int get_start_x() {return start_X;}
 	int get_start_y() {return start_Y;}
 	int get_end_x() {return end_X;}
 	int get_end_y() {return end_Y;}
 
+	void set_start_pos(int Y, int X) {start_Y = Y; start_X = X;}
+	void set_end_pos(int Y, int X) {end_Y = Y; end_X = X;}
+
 	// hope this doesn't get confusing, instead of (x,y) it's (y,x) because
 	// first num in 2d arr is row and second is col so i went with y,x
 	int get_square(int y, int x) {return map[x][y].cell_type;}
-
-
 };
 
 #endif
