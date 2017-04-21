@@ -60,9 +60,18 @@ double Player::get_player_dir()
 void Player::step_forward(double framerate)
 {
 	// variable to keep current distance traveled and total distance
-	float current_dis, total_dis;
+	//float current_dis, total_dis;
 
-	player_x += (framerate * speed);
+	float stepx, stepy;
+
+	stepx = get_stepx(rate, player_dir);
+	stepy = get_stepy(rate, player_dir);
+
+	player_x += stepx;
+	player_y += stepy;
+	
+
+	//player_x += (framerate * speed);
 
 	// Collision detection
 	// Use the get_distance function to see if the player's
