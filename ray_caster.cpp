@@ -32,7 +32,8 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 	for(int i = 0; i < raycast_array_size; i++)
 	{
 		raycast_array[i].set_size(-1);
-		raycast_array[i].set_red(0xFF);
+		raycast_array[i].set_base_hex_color(0xFF,0x00,0x00);
+		raycast_array[i].set_hex_color(0xFF,0x00,0x00);
 	}
 
 
@@ -172,6 +173,14 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 		// Remove fisheye effect
 		distance_calc *= cos(((-FOV / 2.0f) + 
 				(angle_step * i))* M_PI / 180.0f);
+
+
+		// If the wall is the end wall
+		if(wall == 3)
+		{
+			// Set the wall to green
+			raycast_array[i].set_base_hex_color(0x00, 0xFF, 0x00);
+		}
 
 		// Set the wall_object color and the wall_object size
 		raycast_array[i].set_hex_color(
