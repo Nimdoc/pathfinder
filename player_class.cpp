@@ -71,18 +71,18 @@ void Player::step_forward(double framerate)
 
 	// If the player's ray does intersect, they can only move that 
 	// distance.
-	if (get_distance(player_x, player_y, wall_x, wall_y) != -1)
-	{
-		total_dis = get_distance(player_x, player_y, wall_x, wall_y);
+	//if (get_distance(player_x, player_y, wall_x, wall_y) != -1)
+	//{
+		//total_dis = get_distance(player_x, player_y, wall_x, wall_y);
 		
 		//If the current distance is less than the total distance,
 		// take a step.
-		if (current_dis < total_dis)
-		{
-			player_x += (framerate * speed);
-			current_dis += player_x;
-		}
-	}
+		//if (current_dis < total_dis)
+		//{
+			//player_x += (framerate * speed);
+			//current_dis += player_x;
+		//}
+	//}
 	
 	
 }
