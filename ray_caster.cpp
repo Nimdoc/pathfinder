@@ -81,6 +81,11 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 		int wall;
 		int side;
 
+		// New wall object colors
+		int new_r;
+		int new_g;
+		int new_b;
+
 		// Get the starting ray position coordinates
 		raypos_x = pos_x / wall_size;
 		raypos_y = pos_y / wall_size;
@@ -182,11 +187,13 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 			raycast_array[i].set_base_hex_color(0x00, 0xFF, 0x00);
 		}
 
+		
+
 		// Set the wall_object color and the wall_object size
 		raycast_array[i].set_hex_color(
-		raycast_array[i].get_base_red() / (distance_calc / 100.0f),
-		raycast_array[i].get_base_green() / (distance_calc / 100.0f),
-		raycast_array[i].get_base_blue() / (distance_calc / 100.0f));
+		raycast_array[i].get_base_red() / (1 + (distance_calc / 100.0f)),
+		raycast_array[i].get_base_green() / (1 + (distance_calc / 100.0f)),
+		raycast_array[i].get_base_blue() / (1 + (distance_calc / 100.0f)));
 			raycast_array[i].set_size(distance_calc);
 
 	}
@@ -209,10 +216,6 @@ float ray_caster::get_stepy(float rate, int degrees)
 {
     return (((sin(degrees * M_PI / 180.0f))*rate));
 }
-
-
-
-
 
 
 
