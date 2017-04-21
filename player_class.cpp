@@ -64,8 +64,8 @@ void Player::step_forward(double framerate)
 
 	float stepx, stepy;
 
-	stepx = get_stepx(rate, player_dir);
-	stepy = get_stepy(rate, player_dir);
+	stepx = get_stepx(player_speed, player_dir);
+	stepy = get_stepy(player_speed, player_dir);
 
 	player_x += stepx;
 	player_y += stepy;
