@@ -49,160 +49,113 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 
 	for(int i = 0; i < raycast_array_size; i++)
 	{
-		int ray_x = pos_x / 100;
-		int ray_y = pos_y / 100;
+		current_angle = start_angle + (i * angle_step);
 
-		float map_x = pos_x / 100.0f;
-		float map_y = pos_y / 100.0f;
 
-		float dir_x;
-		float temp_x;
-		float dir_y;
-		float temp_y;
+		// Current ray position
+		float raypos_x;
+		float raypos_y;
 
-		float step_x_calc;
-		float step_y_calc;
+		// Direction vector components of the ray
+		float ray_dir_x;
+		float ray_dir_y;
 
-		float end_x;
-		float end_y;
-
-		float side_x;
-		float side_y;
-
-		float side_px;
-		float side_py;
-
+		// The distance between X and Y steos
 		float step_x;
 		float step_y;
 
-		int map_step_x;
-		int map_step_y;
+		// Initial distance to first X and Y coordinate
+		float side_x;
+		float side_y;
 
-		float current_box_dist;
+		// Position in the array
+		int map_x;
+		int map_y;
 
-		bool hit;
-		int count = 0;
+		// Map array change
+		int map_dx;
+		int map_dy;
 
+		bool hit = false;
+		int side;
 
+		raypos_x = pos_x / wall_size;
+		raypos_y = pos_y / wall_size;
 
-		map_x = pos_x / 100.0f;
-		map_y = pos_y / 100.0f;
+		map_x = int(pos_x / wall_size);
+		map_y = int(pos_y / wall_size);
 
-		hit = false;
-		count = 0;
+		ray_dir_x = get_stepx(1.0, current_angle);
+		ray_dir_y = get_stepy(1.0, current_angle);
 
-		current_angle = start_angle + (i * angle_step);
+		step_x = sqrt(1 + pow(ray_dir_y, 2) / pow(ray_dir_x, 2));
+		step_y = sqrt(1 + pow(ray_dir_x, 2) / pow(ray_dir_y, 2));
 
-		end_x = pos_x + get_stepx(999999999, current_angle);
-		end_y = pos_y + get_stepy(999999999, current_angle);
-
-		
-		// Get the array step direction for X and Y
-		if(end_x < pos_x)
+		if(ray_dir_x < 0)
 		{
-			map_step_x = -1;
-
-			lineIntersection(pos_x, pos_y,
-						end_x, end_y,
-						ray_x*100, 99999999,
-						ray_x*100, -99999999,
-						&side_x, &temp_y);
-
-			step_x = get_distance(side_x, temp_y,
-					end_x, end_y,
-					(ray_x-1)*100, 99999999,
-					(ray_x-1)*100, -99999999);
+			map_dx = -1;
+			side_x = (raypos_x - map_x) * step_x;
 		}
 		else
 		{
-			map_step_x = 1;
-			
-			lineIntersection(pos_x, pos_y,
-						end_x, end_y,
-						(ray_x+1)*100, 99999999,
-						(ray_x+1)*100, -99999999,
-						&side_x, &temp_y);
-			
-			step_x = get_distance(side_x, temp_y,
-					end_x, end_y,
-					(ray_x+2)*100, 99999999,
-					(ray_x+2)*100, -99999999);
+			map_dx = 1;
+			side_x = (map_x + 1.0f - raypos_x) * step_x;
 		}
-		if(end_y < pos_y)
+		if(ray_dir_y < 0)
 		{
-			map_step_y = -1;
-			
-			lineIntersection(pos_x, pos_y,
-						end_x, end_y,
-						99999999, ray_y*100,
-						-99999999, ray_y*100,
-						&temp_x, &side_y);
-			
-			step_y = get_distance(temp_x, side_y,
-					end_x, end_y,
-					99999999, (ray_y-1)*100,
-					-99999999, (ray_y-1)*100);
+			map_dy = -1;
+			side_y = (raypos_y - map_y) * step_y;
 		}
 		else
 		{
-			map_step_y = 1;
-			
-			lineIntersection(pos_x, pos_y,
-						end_x, end_y,
-						99999999, (ray_y+1)*100, 
-						-99999999, (ray_y+1)*100,
-						&temp_x, &side_y);
-			
-			step_y = get_distance(temp_x, side_y,
-					end_x, end_y,
-					99999999, (ray_y+2)*100,
-					-99999999, (ray_y+2)*100);
+			map_dy = 1;
+			side_y = (map_y + 1.0f - raypos_y) * step_y;
 		}
-/*
-std::cout << std::endl << pos_x  << "  " << pos_y << "  " << step_x << "  "
-			<< step_y << "  " << direction;
-*/
-		// Loop until we hit something or loop too long
-		while(!hit && count < 1000)
+
+if(i == 320)
+std::cout << std::endl << "SX: " << step_x << "  " <<  "SY: " << step_y
+	<< "  " << "SiX: " << side_x << "  " << "SiY: " << side_y
+	<< "  " << "RPX: " << raypos_x << "  " << "RPY: " <<raypos_y;
+
+		while(!hit)
 		{
 			if(side_x < side_y)
 			{
-				ray_x += map_step_x;
 				side_x += step_x;
+				map_x += map_dx;
+				side = 0;
 			}
 			else
 			{
-				ray_y += map_step_y;
 				side_y += step_y;
+				map_y += map_dy;
+				side = 1;
 			}
 
-std::cout << std::endl << ray_x << "  " << ray_y << "  " << hit;
-
-
-			if(maze.get_square(ray_x, ray_y) > 0)
-			{
+			if(maze.get_square(map_y, map_x) > 0)
 				hit = true;
-			}
-			count++;
 		}
 
-		distance_calc = sqrt(pow(side_x - pos_x, 2) + 
-					pow(side_y - pos_y, 2));
+		if(hit)
+		if(side == 0)
+		{
+			distance_calc = (map_x - raypos_x + 
+					(1 - step_x) / 2) / ray_dir_x;
+		}
+		else
+		{
+			distance_calc = (map_y - raypos_y + 
+					(1 - step_y) / 2) / ray_dir_y;
+		}
 
-//std::cout << std::endl << ray_x << "  " << ray_y << "  " << hit;
-
-if(hit){
-//		distance_calc = get_box_distance(pos_x, pos_y, end_x, end_y,
-//						ray_x * wall_size,
-//						ray_y * wall_size,
-//						wall_size);
+		distance_calc *= wall_size;
 
 		raycast_array[i].set_hex_color(
 		raycast_array[i].get_base_red() / (distance_calc / 100.0f),
 		raycast_array[i].get_base_green() / (distance_calc / 100.0f),
 		raycast_array[i].get_base_blue() / (distance_calc / 100.0f));
 			raycast_array[i].set_size(distance_calc);
-}
+
 	}
 }
 
