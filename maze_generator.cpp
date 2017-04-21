@@ -249,8 +249,8 @@ void generate_maze::generate_map()
 	set_end_pos(pos_Y, pos_X);
 
 	// if cheats then label the cells which make up the correct path
-	//if (cheats)
-	//	cheat_mode(cheat_Y, cheat_X);
+	if (cheats)
+		cheat_mode(cheat_Y, cheat_X);
 }
 
 // mark the cheat path
@@ -317,8 +317,8 @@ void generate_maze::print_map()
 				cout << "S";
 			else if (map[i][j].cell_type == END)
 				cout << "E";
-			//else if (map[i][j].cell_type == CHEAT_PATH)
-			//	cout << ".";
+			else if (map[i][j].cell_type == CHEAT_PATH)
+				cout << ".";
 		}
 	}
 	cout << endl;
