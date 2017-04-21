@@ -43,6 +43,7 @@ void generate_maze::generate_map()
 	// marks only the odd coordinates as cheat_path
 	stack<int> cheat_X, cheat_Y;
 
+	// loop through until all the walls are knocked out that need to be
 	while((num_visited_cells < total_num_cells))
 	{
 		bool can_move_north = false;
@@ -50,33 +51,50 @@ void generate_maze::generate_map()
 		bool can_move_west = false;
 		bool can_move_east = false;
 
+		// if current cell is 2 or more cells from north edge of map
+		// and the target cell hasn't been visited yet
 		if ( (pos_Y > 1) && (map[pos_Y-2][pos_X].visited == false ) &&
+				// and the north wall exists for current cell
 				(map[pos_Y][pos_X].north_wall == true &&
+				// and the south wall exists for target cell
 				map[pos_Y-2][pos_X].south_wall == true) )
 		{
 			can_move_north = true;
 		}
+		// if current cell is 2 or more cells from south edge of map
+		// and the target cell hasn't been visited yet
 		if ( (pos_Y < map_size-2) && (map[pos_Y+2][pos_X].visited == false ) &&
+				// and the south wall exists for current cell
 				(map[pos_Y][pos_X].south_wall == true &&
+				// and the north wall exists for target cell
 				 map[pos_Y+2][pos_X].north_wall == true) )
 		{
 			can_move_south = true;
 		}
+		// if current cell is 2 or more cells from the west edge of map
+		// and the target cell hasn't been visited yet
 		if ( (pos_X > 1) && (map[pos_Y][pos_X-2].visited == false) &&
+				// and the west wall exists for current cell
 				(map[pos_Y][pos_X].west_wall == true &&
+				// and the east wall exists for target cell
 				 map[pos_Y][pos_X-2].east_wall == true) )
 		{
 			can_move_west = true;
 		}
+		// if  is 2 or more cells fromt he east edge of the map
+		// and the target cell hasn't been visited yet
 		if ( (pos_X < map_size-2) &&
 				(map[pos_Y][pos_X+2].visited == false) &&
+				// and the east wall exists for current cell
 				(map[pos_Y][pos_X].east_wall == true &&
+				// and the west wall exists for target pos
 				 map[pos_Y][pos_X+2].west_wall == true) )
 		{
 			can_move_east = true;
 		}
 
-		// if we can clear a wall surrounding the current cell, in any direction
+		// if we can move to a target cell in any direction and clear the wall
+		// between them..
 		if (can_move_north || can_move_south || can_move_west || can_move_east)
 		{
 			// found_next_move is true when a random direction is chosen
@@ -231,8 +249,8 @@ void generate_maze::generate_map()
 	set_end_pos(pos_Y, pos_X);
 
 	// if cheats then label the cells which make up the correct path
-	if (cheats)
-		cheat_mode(cheat_Y, cheat_X);
+	//if (cheats)
+	//	cheat_mode(cheat_Y, cheat_X);
 }
 
 // mark the cheat path
@@ -299,8 +317,8 @@ void generate_maze::print_map()
 				cout << "S";
 			else if (map[i][j].cell_type == END)
 				cout << "E";
-			else if (map[i][j].cell_type == CHEAT_PATH)
-				cout << ".";
+			//else if (map[i][j].cell_type == CHEAT_PATH)
+			//	cout << ".";
 		}
 	}
 	cout << endl;
