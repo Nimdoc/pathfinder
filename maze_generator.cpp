@@ -321,11 +321,7 @@ void generate_maze::print_map()
 				cout << ".";
 		}
 	}
-<<<<<<< HEAD
-	cout << endl;
-=======
 	cout << endl << endl;
->>>>>>> master
 }
 
 
