@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 	// if no argument or an even number entered,
 	// tell user and quit
 	
-	// create the player object
+	// Create the player object
 	Player player1;
 
 	if (argc !=2) 
@@ -89,8 +89,15 @@ int main(int argc, char** argv)
 
 	float angle = 0;
 	float time = 0;
-	double pos_x = 200;
-	double pos_y = 400;
+	// Old player positions
+	//double pos_x = 200;
+	//double pos_y = 400;
+
+	// New player positions using player_class
+	player1.set_player_pos(200, 400);
+
+	// Set the player's speed
+	player1.set_player_speed(SPEED);
 
 	double frame_rate;
 
@@ -136,22 +143,43 @@ int main(int argc, char** argv)
 		cast_display.read_events(inputs);
 
 		// Modify player position
+		// Old version, replaced in the player_class
+		//if(inputs.W_FORWARD)
+		//{
+			//pos_x += (frame_rate * SPEED);
+		//}
+		//if(inputs.W_BACKWARD)
+		//{
+			//pos_x -= (frame_rate * SPEED);
+		//}
+		//if(inputs.W_LEFT)
+		//{
+			//pos_y -= (frame_rate * SPEED);
+		//}
+		//if(inputs.W_RIGHT)
+		//{
+			//pos_y += (frame_rate * SPEED);
+		//}
+
+		// Modify player position using player_class
+		// New version
 		if(inputs.W_FORWARD)
 		{
-			pos_x += (frame_rate * SPEED);
+			player1.step_forward(frame_rate);
 		}
 		if(inputs.W_BACKWARD)
 		{
-			pos_x -= (frame_rate * SPEED);
+			player1.step_backward(frame_rate);
 		}
 		if(inputs.W_LEFT)
 		{
-			pos_y -= (frame_rate * SPEED);
+			player1.step_left(frame_rate);
 		}
 		if(inputs.W_RIGHT)
 		{
-			pos_y += (frame_rate * SPEED);
+			player1.step_right(frame_rate);
 		}
+
 
 		// Check if quit button was pressed 
 		if(inputs.W_QUIT)
@@ -168,3 +196,6 @@ double get_elapsed_time()
 
 	begin = clock();
 }
+
+// Removed the get_stepx and get_stepy functions and placed them in 
+// player_class

@@ -10,6 +10,15 @@ private:
 	double player_x, player_y, player_speed;
 	int player_dir;
 
+protected:
+	//get_stepx and get_stepy
+	float get_stepx(float rate, int degrees);
+	float get_stepy(float rate, int degrees);
+
+	//get_distance
+	float get_distance(float line1_x1, float line1_y1, float line1_x2, float line1_y2, float line2_x1, float line2_y1, float line2_x2, float line2_y2);
+
+
 public:
 	//Function to set the player's position.
 	void set_player_pos(double x, double y);
