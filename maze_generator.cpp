@@ -6,7 +6,7 @@ void generate_maze::generate_map()
 	// replace with command line argument or toggle?
 	// or we can just leave it out of the game but show it in
 	// console for debugging
-	bool cheats = false;
+	bool cheats = true;
 
 	int random_wall = 0;
 	int pos_X, pos_Y;
