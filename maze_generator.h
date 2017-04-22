@@ -87,7 +87,7 @@ public:
 
 	// hope this doesn't get confusing, instead of (x,y) it's (y,x) because
 	// first num in 2d arr is row and second is col so i went with y,x
-	int get_square(int y, int x) {return map[x][y].cell_type;}
+	int get_square(int y, int x) {return map[y][x].cell_type;}
 };
 
 #endif
