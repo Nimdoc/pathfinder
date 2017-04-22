@@ -61,7 +61,6 @@ private:
 	// it'd take to change the code to work with a vector instead of an array
 	// and if that's something you'd want to do or not
 	Cell map[MAX_SIZE][MAX_SIZE];
-	void generate_map(int map_size);
 public:
 	generate_maze();
 	generate_maze(int size) {
