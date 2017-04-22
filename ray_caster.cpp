@@ -155,6 +155,16 @@ void ray_caster::get_raycast_array(wall_object raycast_array[],
 			// it's not the start
 			if(wall > 0 && wall != 2)
 				hit = true;
+
+			// This will fix the cheat not working and an issue with
+			// the wall being in your face when you start the game
+			// that I was getting, although that was probably equally caused
+			// by the get_square returning [x][y] instead of [y][x]
+
+			//bool wall_here = maze.is_wall(map_y, map_x);
+			//bool end_here = maze.is_end(map_y, map_x);
+			//if (wall_here || end_here)
+			//	hit = true;
 		}
 
 		// If a wall is hit
