@@ -31,21 +31,6 @@ double get_elapsed_time();
 float get_stepx(float rate, int degrees);
 float get_stepy(float rate, int degrees);
 
-
-/*
-Unfinished raycast engine.
-
-Check events stops the engine until a key is pressed.
-
-Spin around the map as a demo for things to come.
-
-Chris: 	Look in the ray_window.cpp file for the check_events function.
-	Thats where you'll want to read events from.
-
-John:	Look in the ray_caster.cpp file. See what the best way to implement
-	your maze class is in the get_raycast_array function.
-*/
-
 int main(int argc, char** argv)
 {
 	bool is_running = true;
