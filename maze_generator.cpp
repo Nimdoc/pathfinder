@@ -1,5 +1,13 @@
 #include "maze_generator.h"
 
+bool is_valid_num(string test_string)
+{
+	istringstream iss(test_string);
+	int tmp;
+	iss >> noskipws >> tmp;
+	return iss.eof() && !iss.fail() && tmp>5 && tmp <= MAX_SIZE;
+}
+
 void generate_maze::generate_map()
 {
 	// direction of the wall to be removed in relation to current cell
@@ -88,6 +96,9 @@ void generate_maze::generate_map()
 	// clears remaining 3 walls around start position so the path to the end
 	// is less linear
 	clear_start_walls();
+
+	// print map to console
+	print_map();
 }
 bool generate_maze::test_north(int pos_Y, int pos_X)
 {
@@ -150,16 +161,6 @@ bool generate_maze::test_east(int pos_Y, int pos_X)
 	return false;
 }
 
-// checks the cell to each direction of the start direction
-// if that cell is a WALL and the cell on the other side of the wall
-// and the start_X != end_X for north/south; start_Y != end_Y for east/west
-// then we clear the walls, this makes the maze feel more like a maze
-// rather than a linear start path for half the maze
-// this does mean the cheat path isn't the shortest path to the END
-// but that shouldn't matter since we aren't using it anyway
-// also, checking if start_Y != end_Y and start_X != end_X is a quick and dirty
-// way of insuring you won't start a maze being able to see the END since it
-// won't clear a wall in the X or Y direction if the END is in the same row
 void generate_maze::clear_start_walls()
 {
 	// clear north wall
@@ -365,5 +366,91 @@ void generate_maze::move_east()
 	map[pos_Y][pos_X].west_wall = false;	// remove west wall
 	num_visited_cells++;
 }
+
+void generate_maze::regenerate_maze(int new_size)
+{
+	// if parameter is not a valid number, resize_map will prompt user to
+	// enter a valid number until a valid number is reached or they press
+	// 'b'/'B' to go back
+	if (resize_map(new_size))
+	{
+		// reset member vars used for generation because they're storing
+		// data from the previous maze
+		reset_map_vars();
+		// re-initialize the map as all walls and special conditions for the
+		// cells bordering the edge
+		init_map();
+		// regenerate the map with the new values and reset map array
+		generate_map();
+	}
+	// if user changes their mind about resize, they can choose to go back in
+	// the resize_map function, which returns false and exits the process
+	else
+	{
+		cout << "Regenerating maze cancelled." << endl;
+	}
+}
+
+bool generate_maze::resize_map(int &new_size)
+{
+	// while new size is out of bounds or an even number
+	while ( ( !(new_size <= MAX_SIZE) && !(new_size >= 0) ) || !(new_size%2))
+	{
+		// prompt user for a new number or b to go back
+		cerr << "Invalid map size. Map size should be an odd number <= "
+				<< MAX_SIZE << endl;
+		cout << "Enter new size (b to go back): ";
+		string tmp;
+		cin >> tmp;
+		// check if tmp is a valid number
+		if (is_valid_num(tmp))
+			new_size = atoi(tmp.c_str());
+		// check if user wants to cancel, if so then return false so
+		// regenerate_maze can cancel
+		if (tmp == "b" || tmp == "B")
+			return false;
+
+	}
+	// once valid number is entered, set new map size and return true
+	// so regenerate_maze can generate a new maze
+	map_size = new_size;
+	return true;
+}
+
+void generate_maze::reset_map_vars()
+{
+	start_X = 0;
+	start_Y = 0;
+	pos_Y = 0;
+	pos_X = 0;
+	end_X = 0;
+	end_Y = 0;
+	num_visited_cells = 1;
+	while(!traversed_X.empty())
+	{
+		traversed_Y.pop();
+		traversed_X.pop();
+	}
+	while (!cheat_X.empty())
+	{
+		cheat_Y.pop();
+		cheat_X.pop();
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

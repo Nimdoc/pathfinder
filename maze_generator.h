@@ -8,6 +8,7 @@
 #include <ctime>
 #include <stdlib.h>
 #include <stack>
+#include <sstream>
 
 // max size of maze x/y value
 #define MAX_SIZE 55
@@ -95,6 +96,14 @@ private:
 	void move_south();
 	void move_west();
 	void move_east();
+
+	// used to resize the map.
+	// NOTE: to regenerate the maze with a new size call
+	// regenerate_maze(int new_size), this is just a helper function
+	bool resize_map(int &new_size);
+
+	// used to reset the class members that are used in map generation
+	void reset_map_vars();
 public:
 	generate_maze();
 	generate_maze(int size) {
@@ -156,6 +165,9 @@ public:
 	// clears the walls around the START position that do not give away the
 	// END position. If clearing a wall exposes the END then the wall will stay
 	void clear_start_walls();
+
+	// regenerates a new maze with the specified size
+	void regenerate_maze(int new_size);
 };
 
 #endif
