@@ -1,3 +1,6 @@
+#ifndef Included_ray_window_H
+#define Included_ray_window_H
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xos.h>
@@ -38,6 +41,22 @@ class ray_window
 		
 		void line_cast(wall_object line_array[]);
 		void clear();
+
+		void draw_text_box(int x, int y,
+                	int x_size, int y_size,
+	                std::string text,
+	                int color);
+
+		void fill_box(int x, int y,
+                        int x_size, int y_size,
+                        int color);
+
+		int read_buffered_input();
+
+		void draw_box(int x, int y,
+	                int x_size, int y_size,
+        	        int color);
+
 	private:
 
 		Display *current_display;
@@ -56,3 +75,5 @@ class ray_window
 		void close();
 
 };
+
+#endif

@@ -304,9 +304,92 @@ void ray_window::clear()
 	XClearWindow(current_display, current_window);
 }
 
+void ray_window::draw_text_box(int x, int y, 
+		int x_size, int y_size,
+		std::string text,
+		int color)
+{
+	XSetForeground(current_display,graphics_context, color);
 
+	XDrawRectangle(current_display, current_window, graphics_context,
+			x, y, x_size, y_size);
+	draw_text(x + 8, y + (y_size / 2), text);
+}
 
+void ray_window::draw_box(int x, int y,
+                int x_size, int y_size,
+                int color)
+{
+        XSetForeground(current_display,graphics_context, color);
 
+        XDrawRectangle(current_display, current_window, graphics_context,
+                        x, y, x_size, y_size);
+}
+
+void ray_window::fill_box(int x, int y,
+			int x_size, int y_size,
+        	        int color)
+{
+	XSetForeground(current_display,graphics_context, color);
+
+	XFillRectangle(current_display,
+                        current_window,
+                        graphics_context,
+                        x, y, 
+                        x_size, y_size);
+}
+
+int ray_window::read_buffered_input()
+{
+	int input = -1;
+
+	// Read next event.
+	XNextEvent(current_display, &event);
+	switch(event.type)
+	{
+		case KeyPress:
+			char keys[25];
+			int len = 25;
+			KeySym keysym;
+			len = XLookupString(&event.xkey, 
+					keys, 25, &keysym, 
+					NULL);
+			for(int i = 0; i < len; i++)
+			{
+				if (keys[i] == 'w')
+				{
+					input = 1;
+				}
+				else if (keys[i] == 's')
+				{
+					input = 2;
+				}
+				else if (keys[i] == 'a')
+				{
+					input = 3;
+				}
+				else if (keys[i] == 'd')
+				{
+					input = 4;
+				}
+				else if (keys[i] == 'p')
+				{
+					input = 5;
+				}
+				else if (keys[i] == 'k')
+				{
+					input = 6;
+				}
+				else
+				{
+					input = -1;
+				}
+			}
+			break;
+	}
+
+	return input;
+}
 
 
 

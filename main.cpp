@@ -7,6 +7,7 @@
 #include "wall_object.h"
 #include "ray_caster.h"
 #include "maze_generator.h"
+#include "menu.h"
 
 // GLOBAL CONSTANTS
 
@@ -33,34 +34,37 @@ float get_stepy(float rate, int degrees);
 
 int main(int argc, char** argv)
 {
-	bool is_running = true;
-	// if no argument or an even number entered,
-	// tell user and quit
-	
-	if (argc !=2) 
-		std::cout << "Usage: ./Pathfinder <Size>" << std::endl;
-	if (!(atoi(argv[1])%2))
-		std::cout << "Size of maze must be an odd number" << std::endl;
-	
-	// generate maze with size from argument
-	generate_maze Maze(atoi(argv[1]));
+	bool program_running = true;
+	bool game_running = false;
 
-	// initialize the map
-	Maze.init_map();
+	int choice = -1;
+	int maze_size;
 
-	// generate the map
-	Maze.generate_map();
+	float angle = 0;
+	float time = 0;
 
-	// print map
-	Maze.print_map();
+	double pos_x;
+	double pos_y;
 
-	/* End of changes I made in main() -Steve */
+	double frame_rate;
+
+	ray_caster caster;
+
+	menu game_menu(RESOLUTION_X, RESOLUTION_Y);
 
 	ray_window cast_display(RESOLUTION_X, RESOLUTION_Y);
 
 	keyboard_input inputs;
 
 	wall_object rays[RESOLUTION_X];
+
+	generate_maze Maze(5);
+
+	// if no argument or an even number entered,
+	// tell user and quit
+		
+
+	/* End of changes I made in main() -Steve */
 
 	// Set default values for all the wall_objects in the rays array
 	for(int i = 0; i < RESOLUTION_X; i++)
@@ -75,25 +79,58 @@ int main(int argc, char** argv)
 		// Set the color of the wall
 		rays[i].set_base_hex_color(0xFF,0x00,0x00);
 	}
-
-	ray_caster caster;
-
-	float angle = 0;
-	float time = 0;
-	double pos_x = (Maze.get_start_x() * UNIT_SIZE) + (UNIT_SIZE / 2);
-	double pos_y = (Maze.get_start_y() * UNIT_SIZE) + (UNIT_SIZE / 2);
-
-	double frame_rate;
+	
 
 	// Game loop
-	while(is_running)
+	while(program_running)
+	{
+
+	game_menu.get_menu_choice(choice, maze_size, cast_display);
+
+	switch(choice)
+	{
+		case 0:
+			maze_size = 13;
+			game_running = true;
+			break;
+		case 1:
+			maze_size = 25;
+			game_running = true;
+			break;
+		case 2:
+			maze_size = 37;
+			game_running = true;
+			break;
+		case 3:
+			maze_size = 5;
+			game_running = false;
+			break;
+	}
+
+	// generate maze with size from argument
+	Maze = generate_maze(maze_size);
+
+	// initialize the map
+	Maze.init_map();
+
+	// generate the map
+	Maze.generate_map();
+
+	// print map
+	Maze.print_map();
+
+	pos_x = (Maze.get_start_x() * UNIT_SIZE) + (UNIT_SIZE / 2);
+	pos_y = (Maze.get_start_y() * UNIT_SIZE) + (UNIT_SIZE / 2);
+
+
+	while(game_running)
 	{
 		frame_rate = get_elapsed_time();
 
 		// Get the sizes of the walls to be drawn
 		caster.get_raycast_array(rays, RESOLUTION_X,
                                  	pos_x, pos_y,
-				 	Maze, atoi(argv[1]),
+				 	Maze, maze_size,
                                  	FIELD_OF_VIEW, angle,
                                  	CUBE_SIDE_LENGTH);
 	
@@ -153,7 +190,8 @@ int main(int argc, char** argv)
 
 		// Check if quit button was pressed 
 		if(inputs.W_QUIT)
-			is_running = false;
+			game_running = false;
+	}
 	}
 }
 
