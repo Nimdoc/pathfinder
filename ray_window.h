@@ -35,7 +35,7 @@ class ray_window
 						int X2, int Y2,
 						int color);
 
-		void draw_text(int x, int y, std::string text);
+		void draw_text(int x, int y, std::string text, int color);
 
 		void draw_buffer();
 		

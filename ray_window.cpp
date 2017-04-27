@@ -208,8 +208,11 @@ void ray_window::line_cast_to_buffer(wall_object line_array[])
 	}
 }
 
-void ray_window::draw_text(int x, int y, std::string text)
+void ray_window::draw_text(int x, int y, std::string text, int color)
 {
+	XSetForeground(current_display,graphics_context,
+                                        color);
+
 	XDrawString(current_display, current_window, graphics_context,
 		x, y, text.c_str(), text.length());
 }
@@ -313,7 +316,7 @@ void ray_window::draw_text_box(int x, int y,
 
 	XDrawRectangle(current_display, current_window, graphics_context,
 			x, y, x_size, y_size);
-	draw_text(x + 8, y + (y_size / 2), text);
+	draw_text(x + 8, y + (y_size / 2), text, 0x000000);
 }
 
 void ray_window::draw_box(int x, int y,
