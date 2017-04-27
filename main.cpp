@@ -139,12 +139,13 @@ int main(int argc, char** argv)
 		// Modify player position
 		if(inputs.W_FORWARD)
 		{
+			// Check for collision
 			collision = collides(pos_x, pos_y,
 			                SPEED * frame_rate + 10, 
 					angle, Maze, UNIT_SIZE,
         		       		1);
 	
-			// Move player forwards
+			// Move player forwards if there's no collision
 			if(!collision)
 			{
 			pos_x += get_stepx(frame_rate * SPEED, angle);
@@ -153,9 +154,18 @@ int main(int argc, char** argv)
 		}
 		if(inputs.W_BACKWARD)
 		{
-			// Move player backwards
+			// Check for collision backwards
+			collision = collides(pos_x, pos_y,
+			                SPEED * frame_rate + 10, 
+					angle + 180, Maze, UNIT_SIZE,
+        		       		1);
+	
+			// Move player backwards if there's no collision
+			if(!collision)
+			{
 			pos_x += get_stepx(frame_rate * SPEED, 180 + angle);
 			pos_y += get_stepy(frame_rate * SPEED, 180 + angle);
+			}
 		}
 		if(inputs.W_LEFT)
 		{
