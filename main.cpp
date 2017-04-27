@@ -25,30 +25,22 @@
 
 double get_elapsed_time();
 
-
-// Chris these should be in your player class. 
-// They're here so we can experiment.
 float get_stepx(float rate, int degrees);
 float get_stepy(float rate, int degrees);
 
+bool collides(float pos_x, float pos_y,
+		float rate, int degrees, 
+		generate_maze &maze, int units,
+		int num);
 
-/*
-Unfinished raycast engine.
+bool has_won(float pos_x, float pos_y, generate_maze &maze,
+		int units, int num);
 
-Check events stops the engine until a key is pressed.
-
-Spin around the map as a demo for things to come.
-
-Chris: 	Look in the ray_window.cpp file for the check_events function.
-	Thats where you'll want to read events from.
-
-John:	Look in the ray_caster.cpp file. See what the best way to implement
-	your maze class is in the get_raycast_array function.
-*/
 
 int main(int argc, char** argv)
 {
 	bool is_running = true;
+	bool is_winner = false;
 	// if no argument or an even number entered,
 	// tell user and quit
 	
@@ -100,6 +92,8 @@ int main(int argc, char** argv)
 
 	double frame_rate;
 
+	bool collision;
+
 	// Game loop
 	while(is_running)
 	{
@@ -145,9 +139,17 @@ int main(int argc, char** argv)
 		// Modify player position
 		if(inputs.W_FORWARD)
 		{
+			collision = collides(pos_x, pos_y,
+			                SPEED * frame_rate + 10, 
+					angle, Maze, UNIT_SIZE,
+        		       		1);
+	
 			// Move player forwards
+			if(!collision)
+			{
 			pos_x += get_stepx(frame_rate * SPEED, angle);
 			pos_y += get_stepy(frame_rate * SPEED, angle);
+			}
 		}
 		if(inputs.W_BACKWARD)
 		{
@@ -169,6 +171,11 @@ int main(int argc, char** argv)
 		// Check if quit button was pressed 
 		if(inputs.W_QUIT)
 			is_running = false;
+
+		if(has_won(pos_x, pos_y, Maze, UNIT_SIZE, 3))
+		{
+			is_running = false;
+		}
 	}
 }
 
@@ -199,3 +206,48 @@ float get_stepy(float rate, int degrees)
 {
     return (((sin(degrees * M_PI / 180.0f))*rate));
 }
+
+/*
+Really simple collision detection. Just stops the player if there
+is going to be a collision in the map.
+*/
+bool collides(float pos_x, float pos_y,
+		float rate, int degrees, 
+		generate_maze &maze, int units,
+		int num)
+{
+	float end_x = pos_x + get_stepx(rate, degrees);
+	float end_y = pos_y + get_stepy(rate, degrees);
+
+	int map_x = end_x / units;
+	int map_y = end_y / units;
+
+	if(maze.get_square(map_y, map_x) == num)
+		return true;
+	else
+		return false;
+		
+}
+
+/*
+Returns true if the player is in the defined winning square
+*/
+bool has_won(float pos_x, float pos_y, generate_maze &maze,
+		int units, int num)
+{
+	float map_x = pos_x / units;
+	float map_y = pos_y / units;
+
+	if(maze.get_square(map_y, map_x) == num)
+		return true;
+	else
+		return false;
+}
+
+
+
+
+
+
+
+
