@@ -64,7 +64,7 @@ struct Cell {
 
 class generate_maze {
 private:
-	bool cheats = true;
+	bool cheats = false;
 	Cell map[MAX_SIZE][MAX_SIZE];
 
 	int pos_X, pos_Y;
