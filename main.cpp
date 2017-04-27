@@ -175,8 +175,27 @@ int main(int argc, char** argv)
 		if(has_won(pos_x, pos_y, Maze, UNIT_SIZE, 3))
 		{
 			is_running = false;
+			is_winner = true;
 		}
 	}
+	
+	if(is_winner)
+	{
+		cast_display.clear();
+
+		cast_display.fill_box(0, 0, 
+				RESOLUTION_X, RESOLUTION_Y,
+				0x2F2F2F);
+
+		cast_display.draw_text((RESOLUTION_X / 2) - 20,
+					(RESOLUTION_Y / 2) - 20,
+					"WINNER.", 0xFF0000);
+
+		while(!inputs.W_QUIT)
+		{
+			cast_display.read_events(inputs);
+		}
+	}	
 }
 
 double get_elapsed_time()
