@@ -10,8 +10,8 @@
 
 // GLOBAL CONSTANTS
 
-#define RESOLUTION_X 640
-#define RESOLUTION_Y 480
+#define RESOLUTION_X 800
+#define RESOLUTION_Y 600
 
 #define CUBE_SIDE_LENGTH 100
 #define UNIT_SIZE 100
@@ -57,9 +57,6 @@ int main(int argc, char** argv)
 
 	// generate the map
 	Maze.generate_map();
-
-	// print map
-	Maze.print_map();
 
 	/* End of changes I made in main() -Steve */
 
@@ -181,6 +178,11 @@ int main(int argc, char** argv)
 		// Check if quit button was pressed 
 		if(inputs.W_QUIT)
 			is_running = false;
+
+		// Print out cheat map
+		if(inputs.W_SELECT)
+			Maze.print_position(pos_x / UNIT_SIZE,
+					pos_y / UNIT_SIZE);
 
 		if(has_won(pos_x, pos_y, Maze, UNIT_SIZE, 3))
 		{

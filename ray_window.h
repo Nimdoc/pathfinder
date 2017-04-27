@@ -20,6 +20,7 @@ struct keyboard_input
 	bool W_RIGHT		= false;
 
 	bool W_QUIT		= false;
+	bool W_SELECT		= false;
 };
 
 class ray_window

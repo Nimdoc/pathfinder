@@ -264,6 +264,33 @@ void generate_maze::print_map()
 	}
 	cout << endl << endl;
 }
+
+
+// prints the player position in the map in console
+void generate_maze::print_position(int x, int y)
+{
+	for (int i = 0; i < map_size; i++)
+	{
+		cout << endl;
+		for (int j = 0; j < map_size; j++)
+		{
+			if (x == j && y == i)
+				cout << BOLDYELLOW << "P" << RESET;
+			else if (map[i][j].cell_type == EMPTY)
+				cout << " ";
+			else if (map[i][j].cell_type == WALL)
+				cout << BOLDBLUE << "@" << RESET;
+			else if (map[i][j].cell_type == START)
+				cout << BOLDGREEN << "S" << RESET;
+			else if (map[i][j].cell_type == END)
+				cout << BOLDRED << "E" << RESET;
+			else if (map[i][j].cell_type == CHEAT_PATH)
+				cout << BOLDYELLOW << "." << RESET;
+		}
+	}
+	cout << endl << endl;
+}
+
 void generate_maze::move_north()
 {
 	map[pos_Y-1][pos_X].cell_type = EMPTY;	// clear the cell

@@ -83,6 +83,7 @@ void ray_window::read_events(keyboard_input &inputs)
 	int len = 25;
 	KeySym keysym;
 
+	inputs.W_SELECT = false;
 /*
 	// Reset keyboard inputs	
 	inputs.W_FORWARD	= false;
@@ -132,6 +133,10 @@ void ray_window::read_events(keyboard_input &inputs)
 					{
 						inputs.W_QUIT = true;
 					}
+					if (keys[i] == 'k')
+					{
+				//		inputs.W_SELECT = true;
+					}
 				}
 				break;
 			case KeyRelease:
@@ -164,6 +169,10 @@ void ray_window::read_events(keyboard_input &inputs)
 					if (keys[i] == 'p')
 					{
 						inputs.W_QUIT = false;
+					}
+					if (keys[i] == 'k')
+					{
+						inputs.W_SELECT = true;
 					}
 				}
 				break;

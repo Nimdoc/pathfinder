@@ -127,6 +127,9 @@ public:
 	void generate_map();
 	// prints the maze in the console
 	void print_map();
+	// prints the player position in the map in console
+	void print_position(int x, int y);
+
 	// sets the path generated from START to END as different cell_types
 	// this will usually not be the shortest route since we are clearing the
 	// walls around the start position to give the user more choices to move
